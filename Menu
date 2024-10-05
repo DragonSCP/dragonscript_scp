@@ -1,0 +1,191 @@
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local Workspace = game:GetService("Workspace")
+
+-- Criação do menu flutuante
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = PlayerGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 300)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -150) -- Centraliza o menu na tela
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+-- Criação do ScrollingFrame
+local ScrollingFrame = Instance.new("ScrollingFrame")
+ScrollingFrame.Size = UDim2.new(1, 0, 1, 0)
+ScrollingFrame.Position = UDim2.new(0, 0, 0, 0)
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ScrollingFrame.BorderSizePixel = 0
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 600) -- Ajuste a altura do canvas conforme necessário
+ScrollingFrame.Parent = MainFrame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.Padding = UDim.new(0, 5)
+
+local function CreateButton(name, callback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, 0, 0, 40)
+    Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.Text = name
+    Button.Parent = ScrollingFrame -- Adicione os botões ao ScrollingFrame
+
+    Button.MouseButton1Click:Connect(callback)
+    return Button
+end
+
+-- Função para arrastar o menu
+local dragging
+local dragStart
+local startPos
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        MainFrame.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+    end
+end)
+
+-- Seções e funcionalidades
+
+-- Auto Race Toggle
+local autoRaceActive = false
+CreateButton("Auto Race (V1 - V2 - V3)", function()
+    autoRaceActive = not autoRaceActive
+    print("Auto Race " .. (autoRaceActive and "ativado" or "desativado"))
+end)
+
+-- Auto Pull Lever Toggle
+local autoPullLeverActive = false
+CreateButton("Auto Pull Lever", function()
+    autoPullLeverActive = not autoPullLeverActive
+    print("Auto Pull Lever " .. (autoPullLeverActive and "ativado" or "desativado"))
+end)
+
+-- Auto Turn On Race v3 Toggle
+local autoTurnOnRaceV3Active = false
+CreateButton("Auto Turn On Race v3", function()
+    autoTurnOnRaceV3Active = not autoTurnOnRaceV3Active
+    print("Auto Turn On Race v3 " .. (autoTurnOnRaceV3Active and "ativado" or "desativado"))
+end)
+
+-- Auto Turn On Race v4 Toggle
+local autoTurnOnRaceV4Active = false
+CreateButton("Auto Turn On Race v4", function()
+    autoTurnOnRaceV4Active = not autoTurnOnRaceV4Active
+    print("Auto Turn On Race v4 " .. (autoTurnOnRaceV4Active and "ativado" or "desativado"))
+end)
+
+-- Move Camera to Moon Toggle
+local moveCamToMoonActive = false
+CreateButton("Move Cam to Moon", function()
+    moveCamToMoonActive = not moveCamToMoonActive
+    print("Move Cam to Moon " .. (moveCamToMoonActive and "ativado" or "desativado"))
+end)
+
+-- Teleport to Gear Button
+CreateButton("Teleport to Gear", function()
+    print("Teleporting to Gear...")
+    local gearPosition = Workspace:FindFirstChild("Gear")
+    if gearPosition then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = gearPosition.CFrame
+    else
+        print("Gear não encontrado.")
+    end
+end)
+
+-- Auto Buy Gear Toggle
+local autoBuyGearActive = false
+CreateButton("Auto Buy Gear", function()
+    autoBuyGearActive = not autoBuyGearActive
+    print("Auto Buy Gear " .. (autoBuyGearActive and "ativado" or "desativado"))
+end)
+
+-- Auto Train Race Toggle
+local autoTrainRaceActive = false
+CreateButton("Auto Train Race", function()
+    autoTrainRaceActive = not autoTrainRaceActive
+    print("Auto Train Race " .. (autoTrainRaceActive and "ativado" or "desativado"))
+end)
+
+-- Outros Botões de Teleporte
+CreateButton("Teleport to Top On Great Tree", function()
+    print("Teleporting to Top On Great Tree...")
+    local treePosition = Workspace:FindFirstChild("Great Tree")
+    if treePosition then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = treePosition.CFrame
+    else
+        print("Great Tree não encontrado.")
+    end
+end)
+
+CreateButton("Teleport to Temple of Time", function()
+    print("Teleporting to Temple of Time...")
+    local templePosition = Workspace:FindFirstChild("Temple of Time")
+    if templePosition then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = templePosition.CFrame
+    else
+        print("Temple of Time não encontrado.")
+    end
+end)
+
+-- Lógica do Auto Race e outras funcionalidades
+spawn(function()
+    while wait(0.1) do
+        pcall(function()
+            if autoRaceActive then
+                -- Adicione a lógica para Auto Race aqui
+            end
+            if autoPullLeverActive then
+                local lever = Workspace:FindFirstChild("Lever") -- Altere "Lever" para o nome correto
+                if lever then
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = lever.CFrame
+                else
+                    print("Alavanca não encontrada.")
+                end
+            end
+            if autoTurnOnRaceV3Active then
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "T", false, game)
+                wait(0.1)
+                game:GetService("VirtualInputManager"):SendKeyEvent(false, "T", false, game)
+            end
+            if autoTurnOnRaceV4Active then
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "Y", false, game)
+                wait(0.1)
+                game:GetService("VirtualInputManager"):SendKeyEvent(false, "Y", false, game)
+            end
+            if moveCamToMoonActive then
+                local moonDir = game.Lighting:GetMoonDirection()
+                local lookAtPos = game.Workspace.CurrentCamera.CFrame.p + moonDir * 100
+                game.Workspace.CurrentCamera.CFrame = CFrame.lookAt(game.Workspace.CurrentCamera.CFrame.p, lookAtPos)
+            end
+            if autoBuyGearActive then
+                local args = { [1] = true }
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+            end
+            if autoTrainRaceActive then
+                -- Adicione a lógica para Auto Train Race aqui
+            end
+        end)
+    end
+end)
