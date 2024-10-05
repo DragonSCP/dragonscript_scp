@@ -1,0 +1,81 @@
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Criação do ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = PlayerGui
+
+-- Criação do botão flutuante com emoji
+local FloatingButton = Instance.new("TextButton")
+FloatingButton.Size = UDim2.new(0, 50, 0, 50)
+FloatingButton.Position = UDim2.new(0.5, -25, 0.5, -25) -- Centraliza o botão
+FloatingButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+FloatingButton.BorderSizePixel = 0
+FloatingButton.Text = "🐉" -- Emoji que você escolheu
+FloatingButton.TextScaled = true
+FloatingButton.BackgroundTransparency = 0.5
+FloatingButton.Parent = ScreenGui
+
+-- Criação do menu flutuante
+local function createMenu()
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 200, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, -100, 0.5, -150) -- Centraliza o menu na tela
+    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Parent = ScreenGui
+
+    -- Parte superior com botões de fechar, voltar e salvar
+    local TopFrame = Instance.new("Frame")
+    TopFrame.Size = UDim2.new(1, 0, 0, 30)
+    TopFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    TopFrame.BorderSizePixel = 0
+    TopFrame.Parent = MainFrame
+
+    -- Botão de fechar
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Size = UDim2.new(0, 30, 1, 0)
+    CloseButton.Position = UDim2.new(0, 0, 0, 0)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    CloseButton.Text = "X"
+    CloseButton.Parent = TopFrame
+
+    -- Botão de voltar
+    local BackButton = Instance.new("TextButton")
+    BackButton.Size = UDim2.new(0, 30, 1, 0)
+    BackButton.Position = UDim2.new(0, 35, 0, 0)
+    BackButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    BackButton.Text = "<"
+    BackButton.Parent = TopFrame
+
+    -- Botão de salvar
+    local SaveButton = Instance.new("TextButton")
+    SaveButton.Size = UDim2.new(0, 30, 1, 0)
+    SaveButton.Position = UDim2.new(0, 70, 0, 0)
+    SaveButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    SaveButton.Text = "S"
+    SaveButton.Parent = TopFrame
+
+    -- Criação do ScrollingFrame
+    local ScrollingFrame = Instance.new("ScrollingFrame")
+    ScrollingFrame.Size = UDim2.new(1, 0, 1, -30)
+    ScrollingFrame.Position = UDim2.new(0, 0, 0, 30) -- Ajusta a posição para não sobrepor a parte superior
+    ScrollingFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    ScrollingFrame.BorderSizePixel = 0
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 600) -- Ajuste a altura do canvas conforme necessário
+    ScrollingFrame.Parent = MainFrame
+
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.Parent = ScrollingFrame
+    UIListLayout.Padding = UDim.new(0, 5)
+
+    MainFrame.Parent = ScreenGui
+end
+
+-- Conexão do botão flutuante para abrir o menu
+FloatingButton.MouseButton1Click:Connect(function()
+    createMenu()
+    FloatingButton.Visible = false  -- Oculta o botão flutuante quando o menu está aberto
+end)
